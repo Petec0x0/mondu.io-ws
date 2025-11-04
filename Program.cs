@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleWalletSystem.Models;
 using SimpleWalletSystem.Services;
+using SimpleWalletSystem.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Register Services
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
 var app = builder.Build();
 
@@ -27,6 +29,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Add middleware
+app.UseMiddleware<TenantMiddleware>();
+
 app.UseAuthorization();
 app.MapControllers();
 
@@ -52,20 +58,27 @@ async Task SeedData(AppDbContext context)
     {
         Console.WriteLine("Seeding initial data...");
         
+        // Create GUIDs for consistent seeding
+        var tenant1Id = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var tenant2Id = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        var user1Id = Guid.Parse("33333333-3333-3333-3333-333333333333");
+        var user2Id = Guid.Parse("44444444-4444-4444-4444-444444444444");
+        var user3Id = Guid.Parse("55555555-5555-5555-5555-555555555555");
+        
         // Add tenants
         var tenants = new[]
         {
-            new Tenant { Id = 1, Name = "Fintech Corp" },
-            new Tenant { Id = 2, Name = "Marketplace Inc" }
+            new Tenant { Id = tenant1Id, Name = "Fintech Corp" },
+            new Tenant { Id = tenant2Id, Name = "Marketplace Inc" }
         };
         await context.Tenants.AddRangeAsync(tenants);
 
         // Add wallets
         var wallets = new[]
         {
-            new Wallet { Id = 1, UserId = 101, TenantId = 1, Balance = 1000.00m },
-            new Wallet { Id = 2, UserId = 102, TenantId = 1, Balance = 500.00m },
-            new Wallet { Id = 3, UserId = 201, TenantId = 2, Balance = 750.00m }
+            new Wallet { Id = Guid.NewGuid(), UserId = user1Id, TenantId = tenant1Id, Balance = 1000.00m },
+            new Wallet { Id = Guid.NewGuid(), UserId = user2Id, TenantId = tenant1Id, Balance = 500.00m },
+            new Wallet { Id = Guid.NewGuid(), UserId = user3Id, TenantId = tenant2Id, Balance = 750.00m }
         };
         await context.Wallets.AddRangeAsync(wallets);
 

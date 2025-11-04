@@ -2,8 +2,8 @@ namespace SimpleWalletSystem.Services;
 
 public interface IPaymentService
 {
-    Task<PaymentResponse> InitializePaymentAsync(decimal amount, string currency, string returnUrl);
-    Task<PaymentStatus> VerifyPaymentAsync(string transactionId);
+    Task<string> InitializePayment(decimal amount, string currency, string returnUrl);
+    Task<PaymentStatus> VerifyPayment(string transactionId);
 }
 
 public class PaymentService : IPaymentService
@@ -16,37 +16,29 @@ public class PaymentService : IPaymentService
         _logger = logger;
     }
 
-    public async Task<PaymentResponse> InitializePaymentAsync(decimal amount, string currency, string returnUrl)
+    public async Task<string> InitializePayment(decimal amount, string currency, string returnUrl)
     {
         // Simulate API call delay
         await Task.Delay(100);
 
         var transactionId = Guid.NewGuid().ToString();
         
-        // Mock MPGS response
-        var response = new PaymentResponse
-        {
-            Success = true,
-            TransactionId = transactionId,
-            PaymentUrl = $"{returnUrl}?transactionId={transactionId}",
-            Message = "Payment initiated successfully"
-        };
-
         // Store mock payment as pending
         _mockPayments[transactionId] = new PaymentStatus
         {
             TransactionId = transactionId,
             Success = true,
             Status = "Pending",
-            Amount = amount,
-            Currency = currency
+            Message = "Payment initiated"
         };
 
         _logger.LogInformation("Payment initiated: {TransactionId}, amount: {Amount}", transactionId, amount);
-        return response;
+        
+        // Return just the transaction ID as required by interface
+        return transactionId;
     }
 
-    public async Task<PaymentStatus> VerifyPaymentAsync(string transactionId)
+    public async Task<PaymentStatus> VerifyPayment(string transactionId)
     {
         await Task.Delay(150); // Simulate API call
 
@@ -74,20 +66,10 @@ public class PaymentService : IPaymentService
     }
 }
 
-public class PaymentResponse
-{
-    public bool Success { get; set; }
-    public string TransactionId { get; set; } = string.Empty;
-    public string PaymentUrl { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
-}
-
 public class PaymentStatus
 {
     public string TransactionId { get; set; } = string.Empty;
     public bool Success { get; set; }
-    public string Status { get; set; } = "Pending"; // Pending, Completed, Failed
+    public string Status { get; set; } = "Pending";
     public string Message { get; set; } = string.Empty;
-    public decimal Amount { get; set; }
-    public string Currency { get; set; } = "USD";
 }

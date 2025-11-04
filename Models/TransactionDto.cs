@@ -2,7 +2,7 @@ namespace SimpleWalletSystem.Models;
 
 public class TransactionDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public decimal Amount { get; set; }
     public decimal BalanceBefore { get; set; }
     public decimal BalanceAfter { get; set; }

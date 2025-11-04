@@ -2,9 +2,9 @@ namespace SimpleWalletSystem.Models;
 
 public class Wallet
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public int TenantId { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid UserId { get; set; }
+    public Guid TenantId { get; set; }
     public decimal Balance { get; set; }
     public string Currency { get; set; } = "USD";
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -14,8 +14,8 @@ public class Wallet
 
 public class Transaction
 {
-    public int Id { get; set; }
-    public int WalletId { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid WalletId { get; set; }
     public decimal Amount { get; set; }
     public decimal BalanceBefore { get; set; }
     public decimal BalanceAfter { get; set; }
@@ -30,7 +30,7 @@ public class Transaction
 
 public class Tenant
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
 }

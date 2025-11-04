@@ -14,15 +14,23 @@ public class WalletService : IWalletService
         _logger = logger;
     }
 
-    public async Task<decimal> GetBalanceAsync(int userId)
+    public async Task<WalletBalanceDto> GetBalanceAsync(Guid userId)
     {
         var wallet = await _context.Wallets
             .FirstOrDefaultAsync(w => w.UserId == userId);
+        
+        if (wallet == null)
+            throw new ArgumentException("Wallet not found");
 
-        return wallet?.Balance ?? 0;
+        return new WalletBalanceDto
+        {
+            Balance = wallet.Balance,
+            Currency = wallet.Currency,
+            LastUpdated = DateTime.UtcNow
+        };
     }
 
-    public async Task<List<TransactionDto>> GetTransactionsAsync(int userId)
+    public async Task<IEnumerable<TransactionDto>> GetTransactionsAsync(Guid userId)
     {
         var wallet = await _context.Wallets
             .FirstOrDefaultAsync(w => w.UserId == userId);
@@ -49,8 +57,8 @@ public class WalletService : IWalletService
 
         return transactions;
     }
-    
-    public async Task<Wallet> TopUpAsync(int userId, decimal amount, string paymentRef)
+
+    public async Task<Wallet> TopUpAsync(Guid userId, decimal amount, string paymentRef)
     {
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero");
@@ -61,9 +69,6 @@ public class WalletService : IWalletService
         if (wallet == null)
             throw new ArgumentException("Wallet not found");
 
-        // In real scenario, we would verify payment with MPGS first
-        // For now, we'll assume payment is verified
-
         using var transaction = await _context.Database.BeginTransactionAsync();
 
         try
@@ -71,6 +76,7 @@ public class WalletService : IWalletService
             // Create transaction record
             var walletTransaction = new Transaction
             {
+                Id = Guid.NewGuid(),
                 WalletId = wallet.Id,
                 Amount = amount,
                 BalanceBefore = wallet.Balance,
@@ -99,7 +105,7 @@ public class WalletService : IWalletService
         }
     }
 
-    public async Task<Wallet> TransferAsync(int fromUserId, int toUserId, decimal amount)
+    public async Task<Wallet> TransferAsync(Guid fromUserId, Guid toUserId, decimal amount)
     {
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero");
@@ -130,7 +136,7 @@ public class WalletService : IWalletService
             // Double-check balance within transaction
             fromWallet = await _context.Wallets
                 .FirstAsync(w => w.UserId == fromUserId);
-
+                
             if (fromWallet.Balance < amount)
                 throw new InvalidOperationException("Insufficient balance");
 
@@ -139,6 +145,7 @@ public class WalletService : IWalletService
             // Debit from sender
             var debitTransaction = new Transaction
             {
+                Id = Guid.NewGuid(),
                 WalletId = fromWallet.Id,
                 Amount = -amount,
                 BalanceBefore = fromWallet.Balance,
@@ -152,6 +159,7 @@ public class WalletService : IWalletService
             // Credit to receiver
             var creditTransaction = new Transaction
             {
+                Id = Guid.NewGuid(),
                 WalletId = toWallet.Id,
                 Amount = amount,
                 BalanceBefore = toWallet.Balance,
@@ -170,7 +178,7 @@ public class WalletService : IWalletService
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            _logger.LogInformation("Transfer completed from {FromUserId} to {ToUserId}, amount: {Amount}",
+            _logger.LogInformation("Transfer completed from {FromUserId} to {ToUserId}, amount: {Amount}", 
                 fromUserId, toUserId, amount);
 
             return fromWallet;
