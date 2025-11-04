@@ -1,0 +1,21 @@
+@SimpleWalletSystem_HostAddress = http://localhost:5168
+
+GET {{SimpleWalletSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+
+
+
+# Test 1: Get balance
+curl -X GET "http://localhost:5168/api/wallet/balance/101"
+
+# Test 2: Transfer funds
+curl -X POST "http://localhost:5168/api/wallet/transfer" -H "Content-Type: application/json" -d '{"fromUserId": 101, "toUserId": 102, "amount": 50}'
+
+# Test 3: Get transactions
+curl -X GET "http://localhost:5168/api/wallet/transactions/101"
+
+# Test 4: Initiate top-up
+curl -X POST "http://localhost:5168/api/wallet/topup/initiate" -H "Content-Type: application/json" -d '{"amount": 100, "userId": 101}'
