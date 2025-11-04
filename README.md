@@ -1,10 +1,10 @@
-# 🏦 Multi-Tenant Wallet System
+# Multi-Tenant Wallet System
 
 A secure, scalable wallet system built with **.NET 8**, featuring **multi-tenant architecture**, **payment gateway integration**, and **transaction-safe operations**.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
@@ -25,7 +25,7 @@ dotnet run
 
 ---
 
-## 🧭 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|-----------|-------------|
@@ -37,7 +37,7 @@ dotnet run
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 **System Design**
 ```
@@ -53,7 +53,7 @@ Client → API Layer → Business Layer → Data Layer → PostgreSQL
 
 ---
 
-## 🗃️ Database Schema
+## Database Schema
 
 ```sql
 Tenants (Id, Name, IsActive)
@@ -63,7 +63,7 @@ Transactions (Id, WalletId, Amount, BalanceBefore, BalanceAfter, Type, Status, D
 
 ---
 
-## 🔒 Core Features
+## Core Features
 
 ### Transaction Safety
 - Database transactions with proper isolation levels  
@@ -100,7 +100,7 @@ Transactions (Id, WalletId, Amount, BalanceBefore, BalanceAfter, Type, Status, D
 
 ---
 
-## 🧪 Testing the API
+## Testing the API
 
 ### Get Balance
 ```bash
@@ -135,7 +135,7 @@ curl -X GET "http://localhost:5001/api/wallet/transactions/33333333-3333-3333-33
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 SimpleWalletSystem/
@@ -158,7 +158,7 @@ SimpleWalletSystem/
 
 ---
 
-## 🛡️ Security & Safety Features
+## Security & Safety Features
 
 ### Data Consistency
 - ACID transactions for all financial operations  
@@ -180,7 +180,7 @@ SimpleWalletSystem/
 
 ---
 
-## 🧠 Design Decisions
+## Design Decisions
 
 ### Why Tenant_ID Pattern?
 - Simpler than schema-per-tenant  
@@ -209,7 +209,7 @@ SimpleWalletSystem/
 
 ---
 
-## 🧩 Development Workflow
+## Development Workflow
 
 ```bash
 # Start database
@@ -230,8 +230,3 @@ Then:
 - **Seeded Data:** Includes 2 tenants & 3 demo wallets  
 - **Mock Payments:** Simulates MPGS API responses  
 - **Authentication:** JWT mocked for demo  
-
----
-
-## 📜 License
-Licensed under the **MIT License**.
