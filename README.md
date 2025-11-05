@@ -3,6 +3,27 @@
 A secure, scalable wallet system built with **.NET 8**, featuring **multi-tenant architecture**, **payment gateway integration**, and **transaction-safe operations**.
 
 ---
+## Architecture Diagram Specification
+#### 1. Multi-Tenancy Data Isolation (Tenant_ID Pattern)
+<img width="486" height="625" alt="Multi-Tenancy-Data-Isolation" src="https://github.com/user-attachments/assets/83f70785-1843-4365-8304-2b1f3e942a57" />
+
+#### 2. Services Architecture
+<img width="414" height="767" alt="Services-Architecture" src="https://github.com/user-attachments/assets/0bf8eda7-61df-4107-8854-d86bb8bc77c1" />
+
+#### 3. MPGS Integration Flow
+<img width="467" height="712" alt="3-MPGS-Integration-Flow" src="https://github.com/user-attachments/assets/4ced9861-e7fb-4584-818a-b0c0fa14b695" />
+
+#### 4. Database Schema Details
+<img width="375" height="656" alt="4-Database-Schema-Details" src="https://github.com/user-attachments/assets/e54ac485-4d6e-4754-9191-82a89bdeed8d" />
+
+#### 5. Complete System Flow
+<img width="527" height="470" alt="5-Complete-System-Flow" src="https://github.com/user-attachments/assets/156acc06-81ec-4159-afe7-4bbe7b7698dd" />
+
+#### 6. Transaction Safety Mechanism
+<img width="427" height="342" alt="6-Transaction-Safety-Mechanism" src="https://github.com/user-attachments/assets/8d1d3fb0-5ce0-47fa-9a6a-3c975bdab9fd" />
+
+#### 7. Tenant Isolation Flow
+<img width="423" height="451" alt="7-Tenant-Isolation-Flow" src="https://github.com/user-attachments/assets/4e03f996-e1aa-44e1-97fe-abfbd34d2f47" />
 
 ## Quick Start
 
